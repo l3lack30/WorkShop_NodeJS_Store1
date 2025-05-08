@@ -1,0 +1,8 @@
+# .gitignore
+
+# dotenv environment variable files
+.env
+
+# node_modules
+node_modules
+
