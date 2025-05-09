@@ -3,9 +3,10 @@ const router = express.Router();
 const productSchema = require('../model/productsModel');
 const ordersSchema = require('../model/ordersModel');
 const authenticateToken = require('../middleware/token.middleware');
+const authorizeRoles = require('../middleware/token.authorizeRoles');
 
 // Get all products
-router.get('/', async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
     try {
         const products = await productSchema.find({});
         res.json({
@@ -20,7 +21,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get By Id product
-router.get('/:id', async (req, res) => {
+router.get('/:id', authenticateToken, async (req, res) => {
     try {
         const productId = req.params.id;
 
@@ -46,7 +47,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Post a new product
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, authorizeRoles('admin'), async (req, res) => {
     try {
         const { name, price, description, category, stock } = req.body;
 
@@ -89,7 +90,7 @@ router.post('/', async (req, res) => {
 });
 
 //Put Product
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticateToken, authorizeRoles('admin'), async (req, res) => {
     try {
         const productId = req.params.id;
         const { name, price, description, category, stock } = req.body;
@@ -122,7 +123,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete Product
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticateToken, authorizeRoles('admin'), async (req, res) => {
     try {
         const productId = req.params.id;
 
@@ -152,7 +153,7 @@ router.delete('/:id', async (req, res) => {
 /*------------- Orders of Products -------------*/
 
 // Get All Order of Product
-router.get('/:id/orders', async (req, res) => {
+router.get('/:id/orders', authenticateToken, authorizeRoles('admin'), async (req, res) => {
     try {
 
         const productId = req.params.id;
