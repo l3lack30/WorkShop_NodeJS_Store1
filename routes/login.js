@@ -10,22 +10,22 @@ router.post('/', async (req, res) => {
     try {
         const { username, password } = req.body;
 
-       // ค้นหาผู้ใช้
-       const user = await userSchema.findOne({ username });
-       if (!user) {
-           return res.status(400).json({ status: 400, message: 'Invalid username or password.' });
-       }
+        // ค้นหาผู้ใช้
+        const user = await userSchema.findOne({ username });
+        if (!user) {
+            return res.status(400).json({ status: 400, message: 'Invalid username or password.' });
+        }
 
-       // ตรวจสอบรหัสผ่าน
-       const isMatch = await user.comparePassword(password);
-       if (!isMatch) {
-           return res.status(400).json({ status: 400, message: 'Invalid username or password.' });
-       }
+        // ตรวจสอบรหัสผ่าน
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
+            return res.status(400).json({ status: 400, message: 'Invalid username or password.' });
+        }
 
-       // ตรวจสอบสถานะการอนุมัติของผู้ใช้
-       if (!user.isApproved) {
-           return res.status(401).json({ status: 401, message: 'User not approved.' });
-       }
+        // ตรวจสอบสถานะการอนุมัติของผู้ใช้
+        if (!user.isApproved) {
+            return res.status(401).json({ status: 401, message: 'User not approved.' });
+        }
 
         // สร้าง JWT token
         const token = jwt.sign(
@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
             { expiresIn: JWT_EXPIRES_IN }
         );
 
-        res.json({
+        res.status(200).json({
             status: 200,
             message: 'Login successfully. ',
             access_token: token,

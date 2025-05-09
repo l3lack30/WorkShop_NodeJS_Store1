@@ -7,7 +7,7 @@ const authenticateToken = require('../middleware/token.middleware');
 router.get('/', authenticateToken, async (req, res) => {
     try {
         const orders = await ordersSchema.find({});
-        res.json({
+        res.status(200).json({
             status: 200,
             message: 'Orders fetched successfully. ',
             data: orders

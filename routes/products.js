@@ -8,7 +8,7 @@ const authenticateToken = require('../middleware/token.middleware');
 router.get('/', authenticateToken, async (req, res) => {
     try {
         const products = await productSchema.find({});
-        res.json({
+        res.status(200).json({
             status: 200,
             message: 'Products fetched successfully. ',
             data: products
@@ -33,7 +33,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
             });
         }
 
-        res.json({
+        res.status(200).json({
             status: 200,
             message: 'Product fetched successfully. ',
             data: product
@@ -104,7 +104,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
             return res.status(404).json({ status: 404, message: 'Product not found. ' });
         };
 
-        res.json({
+        res.status(200).json({
             status: 200,
             message: 'Product updated successfully. ',
             data: {
@@ -132,16 +132,9 @@ router.delete('/:id', authenticateToken, async (req, res) => {
             return res.status(404).json({ status: 404, message: 'Product not found. ' });
         }
 
-        res.json({
+        res.status(200).json({
             status: 200,
-            message: 'Product deleted successfully. ',
-            data: {
-                menu_name: deletedProduct.name,
-                price: deletedProduct.price,
-                description: deletedProduct.description,
-                category: deletedProduct.category,
-                stock: deletedProduct.stock
-            }
+            message: 'Product deleted successfully.'
         });
     } catch (err) {
         console.error(err);
@@ -158,7 +151,7 @@ router.get('/:id/orders', authenticateToken, async (req, res) => {
         const productId = req.params.id;
 
         const orders = await ordersSchema.find({ productId }).populate('productId', 'name price');
-        res.json({
+        res.status(200).json({
             status: 200,
             message: 'Orders fetched successfully',
             data: orders
