@@ -147,13 +147,22 @@ router.delete('/:id', authenticateToken, async (req, res) => {
 // Get All Order of Product
 router.get('/:id/orders', authenticateToken, async (req, res) => {
     try {
-
         const productId = req.params.id;
 
+        const productExists = await productSchema.findById(productId);
+
+        if (!productExists) {
+            return res.status(404).json({
+                status: 404,
+                message: 'Product not found.'
+            });
+        }
+
         const orders = await ordersSchema.find({ productId }).populate('productId', 'name price');
+
         res.status(200).json({
             status: 200,
-            message: 'Orders fetched successfully',
+            message: 'Orders fetched successfully. ',
             data: orders
         });
     } catch (err) {
