@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
+const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '7d';
 
 router.post('/', async (req, res) => {
     try {
@@ -27,8 +28,8 @@ router.post('/', async (req, res) => {
             return res.status(401).json({ status: 401, message: 'User not approved.' });
         }
 
-        // สร้าง JWT token
-        const token = jwt.sign(
+        // สร้าง JWT access token (ระยะเวลาสั้น)
+        const accessToken = jwt.sign(
             {
                 id: user._id,
                 username: user.username,
@@ -39,10 +40,23 @@ router.post('/', async (req, res) => {
             { expiresIn: JWT_EXPIRES_IN }
         );
 
+        // สร้าง JWT refresh token (ระยะเวลายาว)
+        const refreshToken = jwt.sign(
+            {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                role: user.role,
+            },
+            JWT_SECRET,
+            { expiresIn: JWT_REFRESH_EXPIRES_IN }
+        );
+
         res.status(200).json({
             status: 200,
             message: 'Login successfully. ',
-            access_token: token,
+            access_token: accessToken,
+            refresh_token: refreshToken,
             data: {
                 id: user._id,
                 username: user.username,
