@@ -8,7 +8,7 @@ router.post('/', async (req, res) => {
     try {
         const existingUser = await userSchema.findOne({ $or: [{ username }, { email }] });
         if (existingUser) {
-            return res.status(400).json({ status: 400, message: 'Username or Email already exists. ' });
+            return res.status(400).json({ status: 400, message: 'Username or Email already exists. ', data: null });
         }
 
         const newUser = new userSchema({
@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ status: 500, message: 'Server error. ' });
+        res.status(500).json({ status: 500, message: 'Server error. ', data: null });
     }
 });
 

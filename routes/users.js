@@ -17,7 +17,7 @@ router.put('/:id/approve', authenticateToken, authorizeRoles('admin'), async (re
     );
 
     if (!user) {
-      return res.status(404).json({ status: 404, message: 'User not found. ' });
+      return res.status(404).json({ status: 404, message: 'User not found. ', data: null });
     }
 
     res.status(200).json({
@@ -34,7 +34,7 @@ router.put('/:id/approve', authenticateToken, authorizeRoles('admin'), async (re
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ status: 500, message: 'Server error. ' });
+    res.status(500).json({ status: 500, message: 'Server error. ', data: null });
   }
 });
 

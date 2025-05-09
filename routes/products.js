@@ -15,7 +15,7 @@ router.get('/', authenticateToken, async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ status: 500, message: 'Server error. ' });
+        res.status(500).json({ status: 500, message: 'Server error. ', data: null });
     }
 });
 
@@ -29,7 +29,8 @@ router.get('/:id', authenticateToken, async (req, res) => {
         if (!product) {
             return res.status(404).json({
                 status: 404,
-                message: 'Product not found. '
+                message: 'Product not found. ',
+                data: null
             });
         }
 
@@ -41,7 +42,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ status: 500, message: 'Server error. ' });
+        res.status(500).json({ status: 500, message: 'Server error. ', data: null });
     }
 });
 
@@ -57,6 +58,7 @@ router.post('/', authenticateToken, async (req, res) => {
             return res.status(400).json({
                 status: 400,
                 message: 'This menu name is already in use. Please choose a different name.',
+                data: null
             });
         }
 
@@ -84,7 +86,7 @@ router.post('/', authenticateToken, async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ status: 500, message: 'Server error. ' });
+        res.status(500).json({ status: 500, message: 'Server error. ', data: null });
     }
 });
 
@@ -101,7 +103,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
         );
 
         if (!updatedProduct) {
-            return res.status(404).json({ status: 404, message: 'Product not found. ' });
+            return res.status(404).json({ status: 404, message: 'Product not found. ', data: null });
         };
 
         res.status(200).json({
@@ -117,7 +119,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ status: 500, message: 'Server error. ' });
+        res.status(500).json({ status: 500, message: 'Server error. ', data: null });
     }
 });
 
@@ -129,7 +131,7 @@ router.delete('/:id', authenticateToken, async (req, res) => {
         const deletedProduct = await productSchema.findByIdAndDelete(productId);
 
         if (!deletedProduct) {
-            return res.status(404).json({ status: 404, message: 'Product not found. ' });
+            return res.status(404).json({ status: 404, message: 'Product not found. ', data: null });
         }
 
         res.status(200).json({
@@ -138,7 +140,7 @@ router.delete('/:id', authenticateToken, async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ status: 500, message: 'Server error. ' });
+        res.status(500).json({ status: 500, message: 'Server error. ', data: null });
     }
 });
 
@@ -154,7 +156,8 @@ router.get('/:id/orders', authenticateToken, async (req, res) => {
         if (!productExists) {
             return res.status(404).json({
                 status: 404,
-                message: 'Product not found.'
+                message: 'Product not found.',
+                data: null
             });
         }
 
@@ -167,7 +170,7 @@ router.get('/:id/orders', authenticateToken, async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ status: 500, message: 'Server error. ' });
+        res.status(500).json({ status: 500, message: 'Server error. ', data: null });
     }
 });
 
@@ -180,26 +183,27 @@ router.post('/:id/orders', authenticateToken, async (req, res) => {
 
         //ตรวจสอบความถูกต้องของส่งค่าที่ไม่สมเหตุสมผล เช่น สั่งสินค้า 0 ชิ้น หรือ -1 ชิ้น
         if (!quantity || quantity <= 0) {
-            return res.status(400).json({ status: 400, message: 'Invalid quantity' });
+            return res.status(400).json({ status: 400, message: 'Invalid quantity', data: null });
         }
 
         // ตรวจสอบว่า userId ถูกส่งมาหรือไม่
         if (!userId) {
-            return res.status(400).json({ status: 400, message: 'User ID is required' });
+            return res.status(400).json({ status: 400, message: 'User ID is required', data: null });
         }
 
         // หา product จาก DB
         const product = await productSchema.findById(productId);
 
         if (!product) {
-            return res.status(404).json({ status: 404, message: 'Product not found' });
+            return res.status(404).json({ status: 404, message: 'Product not found', data: null });
         }
 
         // เช็ค stock
         if (product.stock < quantity) {
             return res.status(400).json({
                 status: 400,
-                message: `Insufficient stock. Available: ${product.stock}`
+                message: `Insufficient stock. Available: ${product.stock}`,
+                data: null
             });
         }
 
@@ -227,7 +231,7 @@ router.post('/:id/orders', authenticateToken, async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ status: 500, message: 'Server error. ' });
+        res.status(500).json({ status: 500, message: 'Server error. ', data: null });
     }
 });
 

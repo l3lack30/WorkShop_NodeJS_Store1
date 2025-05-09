@@ -14,7 +14,7 @@ router.get('/', authenticateToken, async (req, res) => {
         });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ status: 500, message: 'Server error. ' });
+        res.status(500).json({ status: 500, message: 'Server error. ', data: null });
     }
 });
 
