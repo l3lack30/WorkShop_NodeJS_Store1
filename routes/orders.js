@@ -2,10 +2,9 @@ const express = require('express');
 const router = express.Router();
 const ordersSchema = require('../model/ordersModel');
 const authenticateToken = require('../middleware/token.middleware');
-const authorizeRoles = require('../middleware/token.authorizeRoles');
 
 // Get all orders
-router.get('/', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
     try {
         const orders = await ordersSchema.find({});
         res.json({
