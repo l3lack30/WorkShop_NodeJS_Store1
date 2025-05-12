@@ -19,6 +19,9 @@ const productSchema = new Schema({
     category: {
         type: String,
     },
+    image: {
+        type: String, 
+    },
 }, { timestamps: true });
 
 module.exports = mongoose.model('products', productSchema);

@@ -3,6 +3,7 @@ const router = express.Router();
 const productSchema = require('../model/productsModel');
 const ordersSchema = require('../model/ordersModel');
 const authenticateToken = require('../middleware/token.middleware');
+const upload = require('../middleware/uploads.middleware');
 
 // Get all products
 router.get('/', authenticateToken, async (req, res) => {
@@ -47,7 +48,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 });
 
 // Post a new product
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authenticateToken, upload.single('image'), async (req, res) => {
     try {
         const { name, price, description, category, stock } = req.body;
 
@@ -68,6 +69,7 @@ router.post('/', authenticateToken, async (req, res) => {
             stock,
             description,
             category,
+            image: req.file ? req.file.path : null 
         });
 
         await newProduct.save();
@@ -81,7 +83,8 @@ router.post('/', authenticateToken, async (req, res) => {
                 price: newProduct.price,
                 description: newProduct.description,
                 category: newProduct.category,
-                stock: newProduct.stock
+                stock: newProduct.stock,
+                image: newProduct.image ? `/images/${newProduct.image}` : null,
             }
         });
     } catch (err) {
@@ -91,7 +94,7 @@ router.post('/', authenticateToken, async (req, res) => {
 });
 
 //Put Product
-router.put('/:id', authenticateToken, async (req, res) => {
+router.put('/:id', authenticateToken, upload.single('image'), async (req, res) => {
     try {
         const productId = req.params.id;
         const { name, price, description, category, stock } = req.body;
