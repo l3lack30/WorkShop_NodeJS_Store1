@@ -6,7 +6,7 @@ const authenticateToken = require('../middleware/token.middleware');
 const upload = require('../middleware/uploads.middleware');
 
 // Get all products
-router.get('/', async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
     try {
         const products = await productSchema.find({});
         res.status(200).json({
@@ -99,6 +99,11 @@ router.put('/:id', authenticateToken, upload.single('image'), async (req, res) =
         const productId = req.params.id;
         const { name, price, description, category, stock } = req.body;
 
+        // ถ้ามีการอัปโหลดรูปใหม่ ให้ใส่ path ใหม่เข้าไป
+        if (req.file) {
+            updateData.image = `/images/${req.file.filename}`;
+        }
+
         const updatedProduct = await productSchema.findByIdAndUpdate(
             productId,
             { name, price, description, category, stock },
@@ -117,7 +122,8 @@ router.put('/:id', authenticateToken, upload.single('image'), async (req, res) =
                 price: updatedProduct.price,
                 description: updatedProduct.description,
                 category: updatedProduct.category,
-                stock: updatedProduct.stock
+                stock: updatedProduct.stock,
+                image: updatedProduct.image,
             }
         });
     } catch (err) {
