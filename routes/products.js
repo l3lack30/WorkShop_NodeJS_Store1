@@ -6,7 +6,7 @@ const authenticateToken = require('../middleware/token.middleware');
 const upload = require('../middleware/uploads.middleware');
 
 // Get all products
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const products = await productSchema.find({});
         res.status(200).json({
@@ -69,7 +69,7 @@ router.post('/', authenticateToken, upload.single('image'), async (req, res) => 
             stock,
             description,
             category,
-            image: req.file ? req.file.path : null 
+            image: req.file ? `/images/${req.file.filename}` : null
         });
 
         await newProduct.save();
@@ -84,7 +84,7 @@ router.post('/', authenticateToken, upload.single('image'), async (req, res) => 
                 description: newProduct.description,
                 category: newProduct.category,
                 stock: newProduct.stock,
-                image: newProduct.image ? `/images/${newProduct.image}` : null,
+                image: newProduct.image,
             }
         });
     } catch (err) {
