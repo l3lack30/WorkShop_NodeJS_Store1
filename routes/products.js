@@ -98,6 +98,7 @@ router.put('/:id', authenticateToken, upload.single('image'), async (req, res) =
     try {
         const productId = req.params.id;
         const { name, price, description, category, stock } = req.body;
+        const updateData = { name, price, description, category, stock,};
 
         // ถ้ามีการอัปโหลดรูปใหม่ ให้ใส่ path ใหม่เข้าไป
         if (req.file) {
