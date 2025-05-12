@@ -107,7 +107,7 @@ router.put('/:id', authenticateToken, upload.single('image'), async (req, res) =
 
         const updatedProduct = await productSchema.findByIdAndUpdate(
             productId,
-            { name, price, description, category, stock },
+            updateData,
             { new: true }
         );
 
