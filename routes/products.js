@@ -50,7 +50,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 // Post a new product
 router.post('/', authenticateToken, upload.single('image'), async (req, res) => {
     try {
-        const { name, price, description, category, stock } = req.body;
+        const { name, price, description, category, stock, rating } = req.body;
 
         // ตรวจสอบว่ามีชื่อเมนูนี้ในระบบอยู่แล้วหรือไม่
         const existingProduct = await productSchema.findOne({ name });
@@ -69,6 +69,7 @@ router.post('/', authenticateToken, upload.single('image'), async (req, res) => 
             stock,
             description,
             category,
+            rating,
             image: req.file ? `/images/${req.file.filename}` : null
         });
 
@@ -80,6 +81,7 @@ router.post('/', authenticateToken, upload.single('image'), async (req, res) => 
             data: {
                 id: newProduct._id,
                 menu_name: newProduct.name,
+                rating: newProduct.rating,
                 price: newProduct.price,
                 description: newProduct.description,
                 category: newProduct.category,
@@ -97,8 +99,8 @@ router.post('/', authenticateToken, upload.single('image'), async (req, res) => 
 router.put('/:id', authenticateToken, upload.single('image'), async (req, res) => {
     try {
         const productId = req.params.id;
-        const { name, price, description, category, stock } = req.body;
-        const updateData = { name, price, description, category, stock,};
+        const { name, price, description, category, stock, rating } = req.body;
+        const updateData = { name, price, description, category, stock, rating};
 
         // ถ้ามีการอัปโหลดรูปใหม่ ให้ใส่ path ใหม่เข้าไป
         if (req.file) {
@@ -122,6 +124,7 @@ router.put('/:id', authenticateToken, upload.single('image'), async (req, res) =
                 menu_name: updatedProduct.name,
                 price: updatedProduct.price,
                 description: updatedProduct.description,
+                rating: updatedProduct.rating,
                 category: updatedProduct.category,
                 stock: updatedProduct.stock,
                 image: updatedProduct.image,

@@ -19,6 +19,10 @@ const productSchema = new Schema({
     category: {
         type: String,
     },
+    rating: {
+        type: Number,
+        min: 0
+    },
     image: {
         type: String, 
     },
