@@ -121,7 +121,7 @@ router.put('/:id', authenticateToken, upload.single('image'), async (req, res) =
             status: 200,
             message: 'Product updated successfully. ',
             data: {
-                menu_name: updatedProduct.name,
+                name: updatedProduct.name,
                 price: updatedProduct.price,
                 description: updatedProduct.description,
                 rating: updatedProduct.rating,
