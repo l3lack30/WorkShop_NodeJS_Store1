@@ -4,9 +4,9 @@ const { Schema } = mongoose;
 const ordersSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'users', 
+        ref: 'users',
         required: true,
-      },    
+    },
     productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'products',
@@ -26,6 +26,11 @@ const ordersSchema = new Schema({
         type: String,
         enum: ['pending', 'completed', 'canceled'],
         default: 'pending',
+    },
+    note: {
+        type: String,
+        default: '',
+        trim: true,
     },
 }, {
     timestamps: true,
