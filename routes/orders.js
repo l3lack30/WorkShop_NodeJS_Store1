@@ -30,12 +30,12 @@ router.get('/', authenticateToken, async (req, res) => {
 router.put('/:id', authenticateToken, async (req, res) => {
     try {
         const orderId = req.params.id;
-        const updateData = req.body; // รับข้อมูลทั้งหมดที่ต้องการอัปเดต
+        const { status } = req.body; 
 
         const updatedOrder = await ordersSchema.findByIdAndUpdate(
             orderId,
-            updateData,
-            { new: true, runValidators: true } 
+            { status }, 
+            { new: true, runValidators: true }
         );
 
         if (!updatedOrder) {
@@ -48,7 +48,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
 
         res.status(200).json({
             status: 200,
-            message: 'อัปเดตคำสั่งซื้อสำเร็จ',
+            message: 'อัปเดตสถานะคำสั่งซื้อสำเร็จ',
             data: updatedOrder
         });
     } catch (err) {
@@ -60,7 +60,6 @@ router.put('/:id', authenticateToken, async (req, res) => {
         });
     }
 });
-
 
 // Delete order
 router.delete('/:id', authenticateToken, async (req, res) => {
