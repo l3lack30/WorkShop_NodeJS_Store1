@@ -8,8 +8,8 @@ router.get('/', authenticateToken, async (req, res) => {
     try {
         const orders = await ordersSchema
             .find({})
-            .populate('productId', 'name price') 
-            .populate('userId', 'username');         
+            .populate('productId', 'name price')
+            .populate('userId', 'username');
 
         res.status(200).json({
             status: 200,
@@ -26,5 +26,69 @@ router.get('/', authenticateToken, async (req, res) => {
     }
 });
 
+// Put order
+router.put('/:id', authenticateToken, async (req, res) => {
+    try {
+        const orderId = req.params.id;
+        const updateData = req.body; // รับข้อมูลทั้งหมดที่ต้องการอัปเดต
+
+        const updatedOrder = await ordersSchema.findByIdAndUpdate(
+            orderId,
+            updateData,
+            { new: true, runValidators: true } 
+        );
+
+        if (!updatedOrder) {
+            return res.status(404).json({
+                status: 404,
+                message: 'ไม่พบคำสั่งซื้อนี้',
+                data: null
+            });
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: 'อัปเดตคำสั่งซื้อสำเร็จ',
+            data: updatedOrder
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            status: 500,
+            message: 'เกิดข้อผิดพลาดของเซิร์ฟเวอร์',
+            data: null
+        });
+    }
+});
+
+
+// Delete order
+router.delete('/:id', authenticateToken, async (req, res) => {
+    try {
+        const orderId = req.params.id;
+
+        const deletedOrder = await ordersSchema.findByIdAndDelete(orderId);
+
+        if (!deletedOrder) {
+            return res.status(404).json({
+                status: 404,
+                message: 'Order not found.',
+                data: null
+            });
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: 'Order deleted successfully.'
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            status: 500,
+            message: 'Server error.',
+            data: null
+        });
+    }
+});
 
 module.exports = router;
