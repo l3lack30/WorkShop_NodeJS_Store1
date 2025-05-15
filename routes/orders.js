@@ -26,17 +26,11 @@ router.get('/', authenticateToken, async (req, res) => {
     }
 });
 
-// Put order
+// Put Order status
 router.put('/:id', authenticateToken, async (req, res) => {
     try {
         const orderId = req.params.id;
         const { status } = req.body;
-
-        const updatedOrder = await ordersSchema.findByIdAndUpdate(
-            orderId,
-            { status },
-            { new: true, runValidators: true }
-        );
 
         const allowedStatuses = ['รอดำเนินการ', 'กำลังดำเนินการ', 'สำเร็จ', 'ยกเลิก'];
 
@@ -47,6 +41,12 @@ router.put('/:id', authenticateToken, async (req, res) => {
                 data: null
             });
         }
+
+        const updatedOrder = await ordersSchema.findByIdAndUpdate(
+            orderId,
+            { status },
+            { new: true, runValidators: true }
+        );
 
         if (!updatedOrder) {
             return res.status(404).json({
@@ -65,7 +65,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
         console.error(err);
         res.status(500).json({
             status: 500,
-            message: 'Server error occurred. ',
+            message: 'Server error occurred.',
             data: null
         });
     }
