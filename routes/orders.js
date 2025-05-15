@@ -9,7 +9,7 @@ router.get('/', authenticateToken, async (req, res) => {
         const orders = await ordersSchema
             .find({})
             .populate('productId', 'name price') 
-            .populate('userId', 'name');         
+            .populate('userId', 'username');         
 
         res.status(200).json({
             status: 200,
