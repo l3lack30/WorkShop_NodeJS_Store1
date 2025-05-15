@@ -39,11 +39,11 @@ router.put('/:id', authenticateToken, async (req, res) => {
         );
 
         const allowedStatuses = ['รอดำเนินการ', 'กำลังดำเนินการ', 'สำเร็จ', 'ยกเลิก'];
-        
+
         if (!allowedStatuses.includes(status)) {
             return res.status(400).json({
                 status: 400,
-                message: 'สถานะไม่ถูกต้อง',
+                message: 'Invalid status value. Allowed values are: ' + allowedStatuses.join(', '),
                 data: null
             });
         }
@@ -51,21 +51,21 @@ router.put('/:id', authenticateToken, async (req, res) => {
         if (!updatedOrder) {
             return res.status(404).json({
                 status: 404,
-                message: 'ไม่พบคำสั่งซื้อนี้',
+                message: 'Order not found',
                 data: null
             });
         }
 
         res.status(200).json({
             status: 200,
-            message: 'อัปเดตสถานะคำสั่งซื้อสำเร็จ',
+            message: 'Order status updated successfully',
             data: updatedOrder
         });
     } catch (err) {
         console.error(err);
         res.status(500).json({
             status: 500,
-            message: 'เกิดข้อผิดพลาดของเซิร์ฟเวอร์',
+            message: 'Server error occurred. ',
             data: null
         });
     }
