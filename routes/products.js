@@ -195,7 +195,7 @@ router.post('/:id/orders', authenticateToken, async (req, res) => {
     try {
         const userId = req.user?.id; //  ดึง userId จาก JWT ที่ถูก decode โดย middleware
         const productId = req.params.id;
-        const { quantity, note, status } = req.body;
+        const { quantity, note } = req.body;
 
         //ตรวจสอบความถูกต้องของส่งค่าที่ไม่สมเหตุสมผล เช่น สั่งสินค้า 0 ชิ้น หรือ -1 ชิ้น
         if (!quantity || quantity <= 0) {
@@ -232,7 +232,6 @@ router.post('/:id/orders', authenticateToken, async (req, res) => {
             productId,
             quantity,
             note,
-            status,
             totalPrice,
         });
 
