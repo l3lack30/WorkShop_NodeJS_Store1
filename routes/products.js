@@ -100,7 +100,7 @@ router.put('/:id', authenticateToken, upload.single('image'), async (req, res) =
     try {
         const productId = req.params.id;
         const { name, price, description, category, stock, rating } = req.body;
-        const updateData = { name, price, description, category, stock, rating};
+        const updateData = { name, price, description, category, stock, rating };
 
         // ถ้ามีการอัปโหลดรูปใหม่ ให้ใส่ path ใหม่เข้าไป
         if (req.file) {
@@ -174,7 +174,10 @@ router.get('/:id/orders', authenticateToken, async (req, res) => {
             });
         }
 
-        const orders = await ordersSchema.find({ productId }).populate('productId', 'name price');
+        const orders = await ordersSchema
+            .find({ productId })
+            .populate('productId', 'name price')
+            .populate('userId', 'name');
 
         res.status(200).json({
             status: 200,
@@ -192,7 +195,7 @@ router.post('/:id/orders', authenticateToken, async (req, res) => {
     try {
         const userId = req.user?.id; //  ดึง userId จาก JWT ที่ถูก decode โดย middleware
         const productId = req.params.id;
-        const { quantity, note } = req.body;
+        const { quantity, note, status } = req.body;
 
         //ตรวจสอบความถูกต้องของส่งค่าที่ไม่สมเหตุสมผล เช่น สั่งสินค้า 0 ชิ้น หรือ -1 ชิ้น
         if (!quantity || quantity <= 0) {
@@ -229,6 +232,7 @@ router.post('/:id/orders', authenticateToken, async (req, res) => {
             productId,
             quantity,
             note,
+            status,
             totalPrice,
         });
 

@@ -24,8 +24,8 @@ const ordersSchema = new Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'completed', 'canceled'],
-        default: 'pending',
+        enum: ['รอดำเนินการ', 'กำลังดำเนินการ', 'สำเร็จ', 'ยกเลิก'],
+        default: 'รอดำเนินการ',
     },
     note: {
         type: String,
