@@ -30,13 +30,23 @@ router.get('/', authenticateToken, async (req, res) => {
 router.put('/:id', authenticateToken, async (req, res) => {
     try {
         const orderId = req.params.id;
-        const { status } = req.body; 
+        const { status } = req.body;
 
         const updatedOrder = await ordersSchema.findByIdAndUpdate(
             orderId,
-            { status }, 
+            { status },
             { new: true, runValidators: true }
         );
+
+        const allowedStatuses = ['รอดำเนินการ', 'กำลังดำเนินการ', 'สำเร็จ', 'ยกเลิก'];
+        
+        if (!allowedStatuses.includes(status)) {
+            return res.status(400).json({
+                status: 400,
+                message: 'สถานะไม่ถูกต้อง',
+                data: null
+            });
+        }
 
         if (!updatedOrder) {
             return res.status(404).json({
